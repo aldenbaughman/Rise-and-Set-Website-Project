@@ -1,9 +1,14 @@
 import Navbar from './components/navbar/navbar'
+import Map from './components/map/map'
 import './App.css'
+
 
 function App() {
   return (
-    <Navbar/>
+    <>
+      <Navbar/>
+      <Map/>
+    </>
   )
 }
 
