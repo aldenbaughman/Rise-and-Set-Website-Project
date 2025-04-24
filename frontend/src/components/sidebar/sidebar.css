@@ -1,7 +1,7 @@
 #sidebar{
     float: left;
     margin: 0;  
-    width: 300px;
+    width: 25vw;
     background-color: grey;
     color: white;
 }
@@ -13,6 +13,3 @@
     color: inherit;
 }
 
-#sidebar h1{
-    color: inherit;
-}

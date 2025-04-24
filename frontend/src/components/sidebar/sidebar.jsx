@@ -1,28 +1,28 @@
 import './sidebar.css'
 import { getSunrise, getSunset } from 'sunrise-sunset-js';
 
-function Sidebar({latitude, longitude}){
-    
+function Sidebar({latitude, longitude, message}){
+
     return(
         <div id = "sidebar">
             <ul>
                 <li>
-                    <h1>LATITUDE: { latitude }</h1>
+                    <h3>LATITUDE: { latitude }</h3>
                 </li>
                 <li>
-                    <h1>LONGITUDE: { longitude }</h1>
+                    <h3>LONGITUDE: { longitude }</h3>
                 </li>
                 <li>
-                    <h1>CITY: </h1>
+                    <h3>CITY: </h3>
                 </li>
                 <li>
-                    <h1>SUNRISE: { getSunrise(latitude,longitude).getHours().toString() }:{getSunrise(latitude,longitude).getMinutes().toString()}</h1>
+                    <h3>SUNRISE: { getSunrise(latitude,longitude).getHours() }:{(getSunrise(latitude,longitude).getMinutes() < 10 ? ('0' + getSunrise(latitude,longitude).getMinutes().toString()):getSunrise(latitude,longitude).getMinutes().toString())}</h3>
                 </li>
                 <li>
-                    <h1>SUNSET: { getSunset(latitude,longitude).getHours().toString() }:{getSunset(latitude,longitude).getMinutes().toString()}</h1>
+                    <h3>SUNSET: { getSunset(latitude,longitude).getHours().toString() }:{(getSunrise(latitude,longitude).getMinutes() < 10 ? ('0' + getSunrise(latitude,longitude).getMinutes().toString()):getSunrise(latitude,longitude).getMinutes().toString())}</h3>
                 </li>
-
             </ul>
+            <p>{message}</p>
         </div> 
     )
 }
