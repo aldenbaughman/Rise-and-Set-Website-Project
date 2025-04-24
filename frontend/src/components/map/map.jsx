@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from 'react-leaflet'
 import  Sidebar  from '../sidebar/sidebar'
 
+import { getSunrise, getSunset } from 'sunrise-sunset-js';
+
 import { useGeolocated } from "react-geolocated";
 
 const userLocation = [42.350876, -71.106918]
@@ -32,31 +34,40 @@ function Map() {
     var [position, setPosition] = useState(userLocation)
     var [latitude, setLatitude] = useState(userLocation[0])
     var [longitude, setLongitude] = useState(userLocation[1])
+    
     var [request, setRequest] = useState('')
     var [response, setResponse] = useState('intial value')
+
+    var [sunriseTime, setSunrise] = useState('00:00')
+    var [sunsetTime, setSunset] = useState('00:00')
 
     async function GemeniLocationInfo(){
             try {
             
             
             console.log('[GemeniLocationInfo] AI Request: ' + request)
+            console.log(JSON.stringify(request))
+
             const response = await fetch('http://localhost:8888/chat', {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
-                },
+                    "Content-Type": "application/json"
+                },  
                 body: JSON.stringify({ request })
             })
             console.log(response.ok)
             if (!response.ok){
                 throw new Error('Oops, something went wrong w/ response!')
             }
-            const { respMessage } = await response.json()
+            
+            const  respMessage  = await response.json()
+            console.log(respMessage.message)
+            
+           
             
             
-            
-            console.log("[GemeniLocationInfo] Response Message: " + respMessage)
-            setResponse('response from gemini: ' + respMessage)
+            console.log("[GemeniLocationInfo] Response Message: " + respMessage.message)
+            setResponse('response from gemini: ' + respMessage.message)
             
             /*
             fetch('http://localhost:8888/add', {
@@ -85,7 +96,10 @@ function Map() {
                 map.flyTo(e.latlng, map.getZoom())
                 setLatitude(e.latlng.lat)
                 setLongitude(e.latlng.lng)
-                setRequest('Tell me information about the location at: ' + e.latlng.lat + ' ' + e.latlng.lng)
+                setSunrise(getSunrise(latitude,longitude).getHours().toString() + ":" + (getSunrise(latitude,longitude).getMinutes() < 10 ? ('0' + getSunrise(latitude,longitude).getMinutes().toString()):getSunrise(latitude,longitude).getMinutes().toString()))
+                setSunrise(getSunset(latitude,longitude).getHours().toString() + ":" + (getSunset(latitude,longitude).getMinutes() < 10 ? ('0' + getSunset(latitude,longitude).getMinutes().toString()):getSunset(latitude,longitude).getMinutes().toString()))
+
+                setRequest('Tell me information about the location ' + e.latlng.lat + ' ' + e.latlng.lng)
                 console.log(request)
                 GemeniLocationInfo()
             }
@@ -105,6 +119,10 @@ function Map() {
                 map.flyTo(e.latlng, map.getZoom())
                 setLatitude(e.latlng.lat)
                 setLongitude(e.latlng.lng)
+
+                setSunrise(getSunrise(latitude,longitude).getHours().toString() + ":" + (getSunrise(latitude,longitude).getMinutes() < 10 ? ('0' + getSunrise(latitude,longitude).getMinutes().toString()):getSunrise(latitude,longitude).getMinutes().toString()))
+                setSunrise(getSunset(latitude,longitude).getHours().toString() + ":" + (getSunset(latitude,longitude).getMinutes() < 10 ? ('0' + getSunset(latitude,longitude).getMinutes().toString()):getSunset(latitude,longitude).getMinutes().toString()))
+                
                 setRequest('Tell me information about the location at: ' + e.latlng.lat + ' ' + e.latlng.lng)
                 console.log(request)
                 GemeniLocationInfo()
@@ -126,6 +144,8 @@ function Map() {
                 <Sidebar 
                     latitude = {latitude}
                     longitude = {longitude}
+                    sunrise={sunriseTime}
+                    sunset={sunsetTime}
                     message = {response}/>
             </div>
             <div id = "map">

@@ -1,7 +1,6 @@
 import './sidebar.css'
-import { getSunrise, getSunset } from 'sunrise-sunset-js';
 
-function Sidebar({latitude, longitude, message}){
+function Sidebar({latitude, longitude, sunset, sunrise, message}){
 
     return(
         <div id = "sidebar">
@@ -16,10 +15,10 @@ function Sidebar({latitude, longitude, message}){
                     <h3>CITY: </h3>
                 </li>
                 <li>
-                    <h3>SUNRISE: { getSunrise(latitude,longitude).getHours() }:{(getSunrise(latitude,longitude).getMinutes() < 10 ? ('0' + getSunrise(latitude,longitude).getMinutes().toString()):getSunrise(latitude,longitude).getMinutes().toString())}</h3>
+                    <h3>SUNRISE: { sunset }</h3>
                 </li>
                 <li>
-                    <h3>SUNSET: { getSunset(latitude,longitude).getHours().toString() }:{(getSunrise(latitude,longitude).getMinutes() < 10 ? ('0' + getSunrise(latitude,longitude).getMinutes().toString()):getSunrise(latitude,longitude).getMinutes().toString())}</h3>
+                    <h3>SUNSET: { sunrise }</h3>
                 </li>
             </ul>
             <p>{message}</p>

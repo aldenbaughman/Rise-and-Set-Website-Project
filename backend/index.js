@@ -28,12 +28,13 @@ const model = genAI.getGenerativeModel({
 
 //"Please tell me the name of the city at the following latitude longitude coordinates as well as a short description of the city: 42.361145, -71.057083"   
 app.post('/chat', async (req, res) => {
-    const userInput = req.body.userInput
-    console.log("[BACKEND] userInput: " + userInput)
+    const request = req.body.request
+    console.log(req.body)
+    console.log("[BACKEND] userInput: " + request)
     let responseMessage
     try {
         //const result = await model.generateContent(userInput)
-        const result = await model.generateContent(userInput)
+        const result = await model.generateContent(request)
         responseMessage = result.response.text()
     } catch(e){
         console.log(e)
@@ -42,7 +43,6 @@ app.post('/chat', async (req, res) => {
     res.json({
         message: responseMessage
     })
-    
     console.log("[BACKEND] responseMessage: " + responseMessage)
 })
 
