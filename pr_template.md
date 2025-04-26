@@ -5,7 +5,7 @@
 
 **Class Year**: 2026
 
-**Favorite Hobby**: reading
+**Favorite Hobby**: Reading and going the the gym
 
 ## Requirements
 Please check off which features you have implemented:
