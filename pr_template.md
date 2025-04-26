@@ -17,7 +17,7 @@ Please check off which features you have implemented:
 - [ ] Deploy the frontend and backend if you can using some of the free deployment tools we talked about in the workshops!
 
 ## Screen Recording 
-**Link**: 
+**Link**: https://drive.google.com/file/d/1d_y3FHQog97oI4OMKUWNYLpbaDnpHsx8/view?usp=sharing
 
 ## Written Portion
 1. **How did the project go? What parts of it did you most enjoy / find yourself good at?**
