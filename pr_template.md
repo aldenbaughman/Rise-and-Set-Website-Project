@@ -18,6 +18,7 @@ Please check off which features you have implemented:
 
 ## Screen Recording 
 **Link**: https://drive.google.com/file/d/1d_y3FHQog97oI4OMKUWNYLpbaDnpHsx8/view?usp=sharing
+This might not play in google drive, you might have to download the video to watch it. Apologies for the inconvenience
 
 ## Written Portion
 1. **How did the project go? What parts of it did you most enjoy / find yourself good at?**
