@@ -2,8 +2,107 @@ import './sidebar.css'
 
 import { useState, useEffect } from 'react'
 
-function Sidebar({latitude, longitude, location, sunset, sunrise, message}){
+import { getSunrise, getSunset } from 'sunrise-sunset-js';
+
+//import fetch from 'node-fetch';
+
+
+function Sidebar({latitude, longitude}){
+    var [address, setAddress] = useState('')
+    var [location, setLocation] = useState('Boston, Massachusetts')
+    
+    var [request, setRequest] = useState([])
+    var [response, setResponse] = useState('waiting for response...')
+
+    var [sunriseTime, setSunrise] = useState('00:00')
+    var [sunsetTime, setSunset] = useState('00:00')
+
+    var[historyElem, setHistoryElem] = useState([])
+    
     var [dbHistory, setDbHistory] = useState([])
+    
+    function DateToTime(date){
+        return date.getHours().toString() + ":" + (date.getMinutes() < 10 ? 
+                                                        ('0' + date.getMinutes().toString()) : 
+                                                        date.getMinutes().toString())
+    }
+
+    //PROBOBLY DOESNT WORK CHECK THIS 
+    
+    useEffect(()=>{
+        geolocateFromLatLng()
+        GemeniLocationInfo()
+    }, [])
+
+    async function geolocateFromLatLng(){
+        try {
+            
+            const response = await fetch('http://localhost:8888/geoloc', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },  
+                body: JSON.stringify({ latitude:latitude, longitude:longitude})
+            })
+            console.log(response.ok)
+            if (!response.ok){
+                throw new Error('Oops, something went wrong w/ communicating with backend')
+            } 
+            
+            const  respMessage  = await response.json()
+            console.log(respMessage.message)
+            
+            console.log("[GemeniLocationInfo] Response Message: " + respMessage.message)
+            setLocation(respMessage.message)
+            
+        } catch (error){
+            console.error(error)
+            return 'Oops, something went wrong geolocating from latlng'
+        }
+    } 
+    
+    async function GemeniLocationInfo(){
+        try {
+            
+            
+            console.log('[GemeniLocationInfo] AI Request: ' + request)
+            console.log(JSON.stringify(request))
+
+            const response = await fetch('http://localhost:8888/chat', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },  
+                body: JSON.stringify({ sunriseTime:sunriseTime, sunsetTime:sunsetTime, location: location})
+            })
+            console.log(response.ok)
+            if (!response.ok){
+                throw new Error('Oops, something went wrong w/ communicating with backend')
+            } 
+            
+            const  respMessage  = await response.json()
+            console.log(respMessage.message)
+            
+            console.log("[GemeniLocationInfo] Response Message: " + respMessage.message)
+            setResponse(respMessage.message)
+
+            console.log("[GemeniLocationInfo] Adding sending log to backend: " + [latitude,longitude,location])
+            fetch('http://localhost:8888/add', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ latitude: latitude, longitude: longitude, location: location})
+            })
+            
+            setHistoryElem([latitude,longitude,location])
+            
+        } catch (error){
+            console.error(error)
+            return 'Oops, something went wrong! with entire thing'
+        }
+    }   
+
 
      //add onclick here to function in map that sets lat long and location!!!!!!!!!!!
         function HistoryElement({latitude, longitude, city}){
@@ -20,7 +119,7 @@ function Sidebar({latitude, longitude, location, sunset, sunrise, message}){
         }
     
         //Use effect every time history sidebar is toggled
-        useEffect(() =>{
+        /*useEffect(() =>{
             fetch('http://localhost:8888/history')
                 .then(res => res.json())
                 .then(data => {
@@ -31,7 +130,7 @@ function Sidebar({latitude, longitude, location, sunset, sunrise, message}){
                         setDbHistory(newDbHistory)
                         console.log(dbHistory)
                 })
-        })
+        }, [])*/
     
         function clearHistory(){
             try{
@@ -50,8 +149,12 @@ function Sidebar({latitude, longitude, location, sunset, sunrise, message}){
             
         }
 
-    return(
+        /*<!-- --!>
+            <p id = "CityName">  {message.split('|', 2)[0]}</p>
+            <p classname ="smalltext">{message.split('|', 2)[1]}</p> */
 
+    return(
+        
         <div className = "sidebar">
             <ul>
                 <li>
@@ -64,16 +167,17 @@ function Sidebar({latitude, longitude, location, sunset, sunrise, message}){
                     <h3>CITY: { location }</h3>
                 </li>
                 <li>
-                    <h3>SUNRISE: { sunset }</h3>
+                    <h3>SUNRISE: { DateToTime(getSunrise(latitude,longitude))}</h3>
                 </li>
                 <li>
-                    <h3>SUNSET: { sunrise }</h3>
+                    <h3>SUNSET: { DateToTime(getSunset(latitude,longitude)) }</h3>
                 </li>
             </ul>
-            <p classname ="smalltext"> Somewhere far away with a similar sunrise/sunset times: </p>
-            <p id = "CityName">  {message.split('|', 2)[0]}</p>
-            <p classname ="smalltext">{message.split('|', 2)[1]}</p>
-
+            <p className ="smalltext"> Somewhere far away with a similar sunrise/sunset times: </p>
+            <p id = "CityName">  {response.split('|', 2)[0]}</p>
+            <p className ="smalltext">{response.split('|', 2)[1]}</p>
+            
+            
         <h2>History</h2>
         <button id="clearButton" onClick= {() => clearHistory()}>
         Clear History

@@ -21,7 +21,6 @@ function Navbar() {
         <div id = "navbar">
             <h1 id = "logo">Rise & Set</h1>
         </div>
-        <Map/>
         </>
     )
 }

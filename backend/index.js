@@ -31,6 +31,22 @@ const model = genAI.getGenerativeModel({
                        `
 })
 
+app.post('/geoloc', async (req, res) => {
+    try {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${req.body.latitude}&lon=${req.body.longitude}`;
+        let address
+        console.
+        fetch(url).then(res=>res.json()).then(data=>setAddress(data.address))
+        console.log(address)
+        setLocation(
+            (address.city != undefined)?
+            (address.city + ', ' + address.country):
+            (address.country), address)
+    }catch(error){
+        console.error(error)
+        return 'Oops, something went wrong with geolocating from lat lng'
+    }
+})
 
 //"Please tell me the name of the city at the following latitude longitude coordinates as well as a short description of the city: 42.361145, -71.057083"   
 app.post('/chat', async (req, res) => {
