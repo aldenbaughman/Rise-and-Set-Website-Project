@@ -27,12 +27,14 @@ function Map({onChange}) {
                     setLongitude(e.latlng.lng)
 
                     map.flyTo(e.latlng, map.getZoom())
+                    onChange(roundCoord(e.latlng.lat), roundCoord(e.latlng.lng))
                 },
                 locationerror(){
                     onChange(centerLocation[0], centerLocation[1])
                     setPosition(centerLocation)
                     setLatitude(centerLocation[0])
                     setLongitude(centerLocation[1])
+                    onChange(roundCoord(e.latlng.lat), roundCoord(e.latlng.lng))
                 }
             })
         }

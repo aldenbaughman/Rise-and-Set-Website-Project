@@ -23,38 +23,16 @@ mongoclient.connect().then(() =>{
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY)
 const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.5-flash-lite",
     systemInstruction: `
-                        Seperated the city that is far away from the input city with a | characeter surrounded by no spaces,
-                        do not under any circumstanse add information before the city name
-                        when giving a description of a town make it 20-40 words and describe only the most important aspects of the city
+                        Give me a 30-40 summary of the input city describing only the most importnat aspects of the city
                        `
-})
-
-app.post('/geoloc', async (req, res) => {
-    try {
-        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${req.body.latitude}&lon=${req.body.longitude}`;
-        let address
-        console.
-        fetch(url).then(res=>res.json()).then(data=>setAddress(data.address))
-        console.log(address)
-        setLocation(
-            (address.city != undefined)?
-            (address.city + ', ' + address.country):
-            (address.country), address)
-    }catch(error){
-        console.error(error)
-        return 'Oops, something went wrong with geolocating from lat lng'
-    }
 })
 
 //"Please tell me the name of the city at the following latitude longitude coordinates as well as a short description of the city: 42.361145, -71.057083"   
 app.post('/chat', async (req, res) => {
     console.log(req.body)
-    const geminiQuery = "Please find a city far away from " + req.body.location + 
-                        " with a similar sunrise time of " + req.body.sunriseTime + 
-                        " and sunset time of " + req.body.sunsetTime
-                        + " you do not need to use presice/ up to date information about sunrise time, use your best guess from your training"
+    const geminiQuery = "Describe the city: " + req.body.location 
     let responseMessage
     try {
         //const result = await model.generateContent(userInput)

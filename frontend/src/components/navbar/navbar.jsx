@@ -5,7 +5,7 @@ import Map from '../map/map'
 import { useState }from 'react'
 
 function Navbar() {
-    var [displayInfo, setInfoDisplay] = useState(true)
+    //var [displayInfo, setInfoDisplay] = useState(true)
 
     function infoClick(){
         setInfoDisplay(true)
