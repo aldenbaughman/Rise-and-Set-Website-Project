@@ -25,7 +25,10 @@ const genAI = new GoogleGenerativeAI(process.env.API_KEY)
 const model = genAI.getGenerativeModel({
     model: "gemini-2.5-flash-lite",
     systemInstruction: `
-                        Give me a 30-40 summary of the input city describing only the most importnat aspects of the city
+                        If the input message is undefined, please return this message "Welcome to Rise&Set, to get information
+                        about a certain city or country, Click on it in the Map!"
+                        If the input message is a city or country, give an at most 100 (no more it messes with website) word summary of the most important aspects of the city
+                        or country. Avoid any titles, just output a clean paragraph of sentances with no titles
                        `
 })
 
@@ -76,10 +79,10 @@ app.get('/history', async (req, res) =>{
 
 app.get('/clear', async (req, res) => {
     try{
-        await mongoclient.db('project-solis').collection('history').deleteMany({});
+        const {id} = await mongoclient.db('project-solis').collection('history').deleteMany({});
         res.status(200)
     }catch(error){
-        console.error(error)
+        console.log(error)
         res.status(500).json({ message: 'Error' })
     }
 })

@@ -10,6 +10,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 
 
 function History(){
+    var[historyElem, setHistoryElem] = useState([])
     var [dbHistory, setDbHistory] = useState([])
 
     //add onclick here to function in map that sets lat long and location!!!!!!!!!!!
@@ -38,31 +39,30 @@ function History(){
                     setDbHistory(newDbHistory)
                     console.log(dbHistory)
             })
-    })
+    }, [])
 
     function clearHistory(){
-        try{
-            console.log('[BACKEND] Deleting History')
-            const response = fetch('http://localhost:8888/clear')
-            console.log('[BACKEND] History Deleted')
-            console.log(response)
-
-            if (!response.ok){
-                throw new Error('Oops, something went wrong w/ response while deleting history')
+            try{
+                console.log('[BACKEND] Deleting History')
+                const response = fetch('http://localhost:8888/clear')
+                console.log('[BACKEND] History Deleted')
+                console.log(response)
+    
+                if (!response.ok){
+                    throw new Error('Oops, something went wrong w/ response while deleting history')
+                }
+            }catch (error){
+                console.error(error)
+                return 'Oops, something went wrong! with entire thing'
             }
-        }catch (error){
-            console.error(error)
-            return 'Oops, something went wrong! with entire thing'
+            
         }
-        
-    }
-
-
 
     return (
         <>
         <div className="sidebar">
-            <button className = "button" onClick= {() => clearHistory()}>
+            <h2>History</h2>
+            <button id="clearButton" onClick= {() => clearHistory()}>
                 Clear History
             </button>
             <div className='historyScroll'>
@@ -76,5 +76,6 @@ function History(){
         </>
     )
 }
+
 
 export default History
