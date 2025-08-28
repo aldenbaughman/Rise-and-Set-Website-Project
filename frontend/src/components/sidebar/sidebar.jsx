@@ -1,42 +1,34 @@
+import { useAppContext } from '../../contexts/context'
 import './sidebar.css'
 
-import { useState, useEffect, useRef } from 'react'
-
-import { getSunrise, getSunset } from 'sunrise-sunset-js';
-
-//import fetch from 'node-fetch';
-
-
-function Sidebar({latitude, longitude, location, geminiResponse}){
+function Sidebar(){
         
-    function DateToTime(date){
-        return date.getHours().toString() + ":" + (date.getMinutes() < 10 ? 
-                                                        ('0' + date.getMinutes().toString()) : 
-                                                        date.getMinutes().toString())
-    }
+    const {appState, dispatch} = useAppContext();
+    
+    const {lat, long, location, sunrise, sunset, info} = appState
 
     return(
         
         <div className = "sidebar">
             <ul>
                 <li>
-                    <h3>LATITUDE: { latitude }</h3>
+                    <h3>LATITUDE: { lat }</h3>
                 </li>
                 <li>
-                    <h3>LONGITUDE: { longitude }</h3>
+                    <h3>LONGITUDE: { long }</h3>
                 </li>
                 <li>
                     <h3>LOCATION: { location }</h3>
                 </li>
                 <li>
-                    <h3>SUNRISE: { DateToTime(getSunrise(latitude,longitude))}</h3>
+                    <h3>SUNRISE: { sunrise }</h3>
                 </li>
                 <li>
-                    <h3>SUNSET: { DateToTime(getSunset(latitude,longitude)) }</h3>
+                    <h3>SUNSET: { sunset}</h3>
                 </li>
             </ul>
             <h2>Loocation Summary:</h2>
-            <p> {geminiResponse} </p>
+            <p> {info} </p>
     </div>
 
     )
